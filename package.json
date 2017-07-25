@@ -1,0 +1,29 @@
+{
+  "name": "htmldissect",
+  "version": "1.0.0",
+  "description": "An HTML parser that lets you write concise and sequential code for extracting data from HTML pages and validating the page structure.",
+  "main": "lib/index.js",
+  "repository" : "ZoltanLajosKis/htmldissect",
+  "scripts": {
+    "coverage": "nyc --reporter=text mocha",
+    "coveralls": "nyc --reporter=text-lcov mocha | coveralls",
+    "lint": "eslint lib test",
+    "test": "mocha"
+  },
+  "keywords": [
+    "HTML",
+    "parser"
+  ],
+  "author": "Zoltán Lajos Kis <zoltan.lajos.kis@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "htmlparser2": "3.9.2"
+  },
+  "devDependencies": {
+    "coveralls": "2.13.1",
+    "eslint": "4.3.0",
+    "eslint-plugin-node": "5.1.1",
+    "mocha": "3.4.2",
+    "nyc": "11.0.3"
+  }
+}
