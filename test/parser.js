@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('chai').assert;
 const Parser = require("../lib/parser.js").Parser;
 
 describe("Parser", () => {

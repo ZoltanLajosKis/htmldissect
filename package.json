@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "An HTML parser that lets you write concise and sequential code for extracting data from HTML pages and validating the page structure.",
   "main": "lib/index.js",
-  "repository" : "ZoltanLajosKis/htmldissect",
+  "repository": "ZoltanLajosKis/htmldissect",
   "scripts": {
     "coverage": "nyc --reporter=text mocha",
     "coveralls": "nyc --reporter=text-lcov mocha | coveralls",
@@ -20,6 +20,7 @@
     "htmlparser2": "3.9.2"
   },
   "devDependencies": {
+    "chai": "4.1.0",
     "coveralls": "2.13.1",
     "eslint": "4.3.0",
     "eslint-plugin-node": "5.1.1",

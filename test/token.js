@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('chai').assert;
 const Token = require("../lib/token.js").Token;
 
 
