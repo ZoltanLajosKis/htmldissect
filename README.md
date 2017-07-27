@@ -257,6 +257,31 @@ multiple type of tokens can follow.
   matches the optional `tag` parameter. Returns the token. Throws an exception
   if no matching token is found to skip to.
 
+The if methods only move to the next token and return it if the token matches
+the conditions; otherwise it returns falls. They can be used for handling
+optional tags (as a shorthand for a peek followed by a single test on the
+token).
+
+- **`ifOpen(tag, match, cb)`**: Returns the next token, or if `tag` is
+  specified returns its attributes. Returns `false` if the next token is not
+  open, or if it does not match the optional `tag` and `match` parameters,
+  where `match` is an object that can specify for each attribute a string,
+  regexp or predicate function.
+- **`ifClose(tag, cb)`**: Returns the next token. Returns `false` if the next
+  token is not close, or if it does not match the optional `tag` parameter.
+- **`ifText(match, cb)`**: Returns the text content of the next text token.
+  Returns `false` if the next token is not text or its text content does not
+  match the optional `match` parameter that can be a string, regexp or
+  predicate function.
+- **`ifComment(match, cb)`**: Returns the text content of the next comment
+  token. Returns `false` if the next token is not comment or its text content
+  does not match the optional `match` parameter that can be a string, regexp
+  or predicate function.
+- **`ifCommentEnd()`**: Returns the next token. Returns `false` if the next
+  token is not a comment end token.
+- **`ifEnd()`**: Returns the next token. Returns `false` if the next token is
+not an end token.
+
 
 ### Token
 
