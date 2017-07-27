@@ -211,8 +211,8 @@ expectation failed.
   regexp or predicate function.
 - **`expectCommentEnd(cb)`**: Returns the next token. Throws exception if the
   next token is not a comment end token.
-- **`expectEnd(cb)`**: Does not return a value. Throws exception if there are
-  more tokens.
+- **`expectEnd(cb)`**: Returns the next token. Throws exception if the next
+  token is not an end token.
 - **`skipToOpen(tag, match, cb)`**: Skips to the next open token that matches
   the optional `tag` and `match` parameters, where `match` is an object that
   can specify for each attribute a string, regexp or predicate function.
@@ -246,8 +246,8 @@ multiple type of tokens can follow.
   string, regexp or predicate function.
 - **`peekExpectCommentEnd(cb)`**: Returns the next token. Throws exception if
   the next token is not a comment end token.
-- **`peekExpectEnd(cb)`**: Returns true if there are no more tokens; false
-  otherwise.
+- **`peekExpectEnd(cb)`**: Returns the next token. Throws exception if the
+  next token is not an end token.
 - **`peekSkipToOpen(tag, match, cb)`**: Skips to before the next open token
   that matches the optional `tag` and `match` parameters, where `match` is an
   object that can specify for each attribute a string, regexp or predicate
@@ -260,7 +260,8 @@ multiple type of tokens can follow.
 
 ### Token
 
-The `Token` objects represent tokens as returned by the above Parser methods.
+The `Token` objects represent tokens as returned by the above Parser methods,
+including an explicit end token at the end.
 
 - **`isOpen(tag, match)`**: Returns true if the token is an open token that
   matches the optional `tag` and `match` parameters, where `match` is an object
@@ -274,6 +275,7 @@ The `Token` objects represent tokens as returned by the above Parser methods.
   matches the optional `match` parameter, where `match` is a string, regexp or
   predicate function.
 - **`isCommentEnd()`**: Returns true if the token is a comment end token.
+- **`isEnd()`**: Returns true if the token is an end token.
 - **`hasAttrs(match)`**: Returns true if the token is an open token and matches
   the `match` parameter, where `match` is an object that can specify for each
   attribute a string, regexp or predicate function.

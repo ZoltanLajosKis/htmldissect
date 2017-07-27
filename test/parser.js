@@ -50,6 +50,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpen();
             });
@@ -76,6 +77,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen("a");
@@ -110,6 +112,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"});
             });
@@ -133,6 +136,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen(() => { /*do nothing*/ });
@@ -162,6 +166,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen("img", {}, () => { /*do nothing*/ });
@@ -198,6 +203,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
             });
@@ -222,6 +228,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
             p.next();
             p.next();
             p.next();
@@ -257,6 +264,7 @@ describe("Parser", () => {
             p.next();
             p.next();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectClose("a");
             });
@@ -280,6 +288,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
             p.next();
             p.next();
             p.next();
@@ -317,6 +326,7 @@ describe("Parser", () => {
             p.next();
             p.next();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectClose("a", () => { /*do nothing*/ });
             });
@@ -346,6 +356,8 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<br/>").end();
+            p.next();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose();
@@ -380,6 +392,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpenClose("a");
             });
@@ -413,6 +426,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"});
             });
@@ -444,6 +458,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose(() => { /*do nothing*/ });
@@ -483,6 +498,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {}, () => { /*do nothing*/ });
             });
@@ -521,6 +537,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"}, () => { /*do nothing*/ });
             });
@@ -544,6 +561,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectText();
@@ -573,6 +591,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectText("Text");
             });
@@ -595,6 +614,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectText(() => { /*do nothing*/ });
@@ -626,6 +646,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectText("Text", () => { /*do nothing*/ });
             });
@@ -649,6 +670,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
@@ -678,6 +700,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectComment("Comment");
             });
@@ -699,6 +722,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.expectComment(() => { /*do nothing*/ });
@@ -729,6 +753,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectComment("Comment", () => { /*do nothing*/ });
             });
@@ -752,6 +777,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
@@ -778,6 +804,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment -->").end();
             p.next();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectCommentEnd(() => { /*do nothing*/ });
             });
@@ -786,16 +813,26 @@ describe("Parser", () => {
 
 
     describe("p.expectEnd()", () => {
-        it("returns if there are no more tokens", () => {
+        it("returns the next token if it is an end token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
             p.next();
-            p.expectEnd();
-            assert.ok(true);
+            let t = p.expectEnd();
+            assert.equal(t.isEnd(), true);
         });
-        it("throws an exception if there are more tokens", () => {
+        it("throws an exception if the next token is not an end token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
+            p.next();
+            assert.throws(() => {
+                p.expectEnd();
+            });
+        });
+        it("throws an exception if there are no more tokens", () => {
+            let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
@@ -804,17 +841,28 @@ describe("Parser", () => {
         });
     });
     describe("p.expectEnd(cb)", () => {
-        it("calls cb if there are no more tokens", (done) => {
+        it("calls cb with the next token if it is an end token", (done) => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
             p.next();
-            p.expectEnd(() => {
+            p.expectEnd(t => {
+                assert.equal(t.isEnd(), true);
                 done();
             });
         });
-        it("throws an exception if there are more tokens", () => {
+        it("throws an exception if the next token is not an end token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
+            p.next();
+            assert.throws(() => {
+                p.expectEnd(() => { /*do nothing*/ });
+            });
+        });
+        it("throws an exception if there are no more tokens", () => {
+            let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
@@ -1015,6 +1063,7 @@ describe("Parser", () => {
             assert.doesNotThrow(() => {
                 p.next();
                 p.next();
+                p.next();
             });
             assert.throws(() => {
                 p.next();
@@ -1036,6 +1085,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<br/>").end();
             assert.doesNotThrow(() => {
+                p.next(() => { /*do nothing*/ });
                 p.next(() => { /*do nothing*/ });
                 p.next(() => { /*do nothing*/ });
             });
@@ -1065,6 +1115,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectOpen();
             });
@@ -1093,6 +1144,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a");
@@ -1130,6 +1182,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"});
             });
@@ -1155,6 +1208,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen(() => { /*do nothing*/ });
@@ -1186,6 +1240,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("img", {}, () => { /*do nothing*/ });
@@ -1224,6 +1279,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a>").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
             });
@@ -1250,6 +1306,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
             p.next();
             p.next();
             p.next();
@@ -1287,6 +1344,7 @@ describe("Parser", () => {
             p.next();
             p.next();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectClose("a");
             });
@@ -1312,6 +1370,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
             p.next();
             p.next();
             p.next();
@@ -1351,6 +1410,7 @@ describe("Parser", () => {
             p.next();
             p.next();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectClose("a", () => { /*do nothing*/ });
             });
@@ -1377,6 +1437,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectText();
@@ -1408,6 +1469,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectText("Text");
             });
@@ -1432,6 +1494,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectText(() => { /*do nothing*/ });
@@ -1465,6 +1528,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectText("Text", () => { /*do nothing*/ });
             });
@@ -1490,6 +1554,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
@@ -1521,6 +1586,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectComment("Comment");
             });
@@ -1544,6 +1610,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
+            p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectComment(() => { /*do nothing*/ });
@@ -1576,6 +1643,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectComment("Comment", () => { /*do nothing*/ });
             });
@@ -1601,6 +1669,7 @@ describe("Parser", () => {
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
@@ -1629,6 +1698,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment -->").end();
             p.next();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.peekExpectCommentEnd(() => { /*do nothing*/ });
             });
@@ -1637,52 +1707,64 @@ describe("Parser", () => {
 
 
     describe("p.peekExpectEnd()", () => {
-        it("returns true if there are no more tokens", () => {
+        it("returns the next token if it is an end token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
             p.next();
-            let res = p.peekExpectEnd();
-            assert.equal(res, true);
-            assert.doesNotThrow(() => {
-                p.expectEnd();
+            let t = p.peekExpectEnd();
+            assert.equal(t.isEnd(), true);
+            let t2 = p.expectEnd();
+            assert.deepEqual(t, t2);
+        });
+        it("throws an exception if the next token is not an end token", () => {
+            let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
+            p.next();
+            assert.throws(() => {
+                p.peekExpectEnd();
             });
         });
-        it("returns false if there are more tokens", () => {
+        it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
-            let res = p.peekExpectEnd();
-            assert.equal(res, false);
+            p.next();
+            p.next();
             assert.throws(() => {
-                p.expectEnd();
+                p.peekExpectEnd();
             });
         });
     });
     describe("p.peekExpectEnd(cb)", () => {
-        it("calls cb with true if there are no more tokens", (done) => {
+        it("calls cb with the next token if it is an end token", (done) => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
             p.next();
-            p.peekExpectEnd(b => {
-                assert.equal(b, true);
-                assert.doesNotThrow(() => {
-                    p.expectEnd();
-                });
+            p.peekExpectEnd(t => {
+                assert.equal(t.isEnd(), true);
+                let t2 = p.expectEnd();
+                assert.deepEqual(t, t2);
                 done();
             });
         });
-        it("calls cb with false if there are more tokens", (done) => {
+        it("throws an exception if the next token is not an end token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
-            p.peekExpectEnd(b => {
-                assert.equal(b, false);
-                assert.throws(() => {
-                    p.expectEnd();
-                });
-                done();
+            assert.throws(() => {
+                p.peekExpectEnd(() => { /*do nothing*/ });
+            });
+        });
+        it("throws an exception if there are no more tokens", () => {
+            let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            p.next();
+            p.next();
+            p.next();
+            p.next();
+            assert.throws(() => {
+                p.peekExpectEnd(() => { /*do nothing*/ });
             });
         });
     });
@@ -1878,6 +1960,7 @@ describe("Parser", () => {
             assert.doesNotThrow(() => {
                 p.next();
                 p.next();
+                p.next();
             });
             assert.throws(() => {
                 p.peek();
@@ -1903,6 +1986,7 @@ describe("Parser", () => {
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<br/>").end();
             assert.doesNotThrow(() => {
+                p.next(() => { /*do nothing*/ });
                 p.next(() => { /*do nothing*/ });
                 p.next(() => { /*do nothing*/ });
             });
