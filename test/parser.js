@@ -45,15 +45,16 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectOpen();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpen(tag)", () => {
@@ -66,22 +67,23 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpen("a");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpen("a");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpen(tag, match)", () => {
@@ -94,28 +96,29 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpen("img", {src: "image.jpg"});
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"});
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"});
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"});
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpen(cb)", () => {
@@ -131,16 +134,17 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectOpen(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
 
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpen(tag, {}, cb)", () => {
@@ -155,22 +159,23 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpen("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpen("img", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen("img", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpen(tag, match, cb)", () => {
@@ -185,28 +190,29 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpen("img", {src: "image.jpg"}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -224,7 +230,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.expectClose();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -234,7 +240,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectClose();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectClose(tag)", () => {
@@ -251,13 +257,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectClose("img");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an close token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.expectClose("a");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -267,7 +273,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectClose("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectClose(cb)", () => {
@@ -284,7 +290,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.expectClose(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -294,7 +300,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectClose(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectClose(tag, cb)", () => {
@@ -313,13 +319,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectClose("img", () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an close token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.expectClose("a", () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -329,7 +335,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectClose("a", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -345,14 +351,14 @@ describe("Parser", () => {
             let p = new Parser().write("<section></p>").end();
             assert.throws(() => {
                 p.expectOpenClose();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is not open", () => {
             let p = new Parser().write("<br/>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<br/>").end();
@@ -361,7 +367,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectOpenClose();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpenClose(tag)", () => {
@@ -374,28 +380,29 @@ describe("Parser", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.expectOpenClose("a");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpenClose("a");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<br/>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpenClose(tag, match)", () => {
@@ -408,28 +415,29 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpenClose("img", {src: "image.jpg"});
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"});
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"});
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"});
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpenClose(cb)", () => {
@@ -447,22 +455,23 @@ describe("Parser", () => {
             let p = new Parser().write("<p><br/></p>").end();
             assert.throws(() => {
                 p.expectOpenClose(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is not open", () => {
             let p = new Parser().write("<br/>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<br/>").end();
             p.next();
             p.next();
+            p.next();
             assert.throws(() => {
                 p.expectOpenClose(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpenClose(tag, {}, cb)", () => {
@@ -480,28 +489,29 @@ describe("Parser", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.expectOpenClose("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpenClose("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<br/>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectOpenClose(tag, match, cb)", () => {
@@ -519,28 +529,29 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpenClose("img", {src: "image.jpg"}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.expectOpenClose("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -557,7 +568,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectText();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -565,7 +576,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectText();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectText(match)", () => {
@@ -580,13 +591,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectText("Click here");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is not text", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectText("Link");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -594,7 +605,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectText("Text");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectText(cb)", () => {
@@ -610,7 +621,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a></a>").end();
             assert.throws(() => {
                 p.expectText(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -618,7 +629,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectText(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectText(match, cb)", () => {
@@ -635,13 +646,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectText("Click here", () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is not text", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectText("Link", () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -649,7 +660,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectText("Text", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -666,7 +677,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectComment();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
@@ -675,7 +686,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectComment();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectComment(match)", () => {
@@ -689,13 +700,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectComment(/^\s*Click here\s*$/);
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is not comment", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectComment("Link");
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -703,7 +714,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectComment("Comment");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectComment(cb)", () => {
@@ -718,7 +729,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a></a>").end();
             assert.throws(() => {
                 p.expectComment(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -726,7 +737,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectComment(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectComment(match, cb)", () => {
@@ -742,13 +753,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectComment(/\s*Click here\s*/, () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if the next token is not comment", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.expectComment("Link", () => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -756,7 +767,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectComment("Comment", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -773,7 +784,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment -->").end();
             assert.throws(() => {
                 p.expectCommentEnd();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
@@ -782,7 +793,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectCommentEnd();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectCommentEnd(cb)", () => {
@@ -798,7 +809,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment -->").end();
             assert.throws(() => {
                 p.expectCommentEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
@@ -807,7 +818,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectCommentEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -827,7 +838,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectEnd();
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -837,7 +848,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectEnd();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.expectEnd(cb)", () => {
@@ -857,7 +868,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "expect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -867,7 +878,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.expectEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -887,7 +898,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><!-- Comment -->").end();
             assert.throws(() => {
                 p.skipToOpen();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToOpen(tag)", () => {
@@ -903,7 +914,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToOpen("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToOpen(tag, match)", () => {
@@ -919,7 +930,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToOpen("img", {src: "image.jpg"});
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToOpen(cb)", () => {
@@ -937,7 +948,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToOpen("a", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToOpen(tag, {}, cb)", () => {
@@ -955,7 +966,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToOpen("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToOpen(tag, match, cb)", () => {
@@ -973,7 +984,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToOpen("img", {src: "image.jpg"}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -991,7 +1002,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><!-- Comment -->").end();
             assert.throws(() => {
                 p.skipToClose();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToClose(tag)", () => {
@@ -1007,7 +1018,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToClose("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToClose(cb)", () => {
@@ -1026,7 +1037,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToClose("a", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.skipToClose(tag, cb)", () => {
@@ -1045,7 +1056,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.skipToClose("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1067,7 +1078,7 @@ describe("Parser", () => {
             });
             assert.throws(() => {
                 p.next();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.next(cb)", () => {
@@ -1091,7 +1102,7 @@ describe("Parser", () => {
             });
             assert.throws(() => {
                 p.next(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1110,15 +1121,16 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen();
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectOpen(tag)", () => {
@@ -1133,22 +1145,23 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectOpen("a");
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a");
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectOpen(tag, match)", () => {
@@ -1164,28 +1177,29 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectOpen("img", {src: "image.jpg"});
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"});
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"});
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"});
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectOpen(cb)", () => {
@@ -1203,16 +1217,17 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen(() => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
 
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectOpen(tag, {}, cb)", () => {
@@ -1229,22 +1244,23 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectOpen("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("img", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("img", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectOpen(tag, match, cb)", () => {
@@ -1261,28 +1277,29 @@ describe("Parser", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectOpen("img", {src: "image.jpg"}, () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next is not an open token", () => {
             let p = new Parser().write("<a></a>").end();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
-            let p = new Parser().write("<a>").end();
+            let p = new Parser().write("<br/>").end();
+            p.next();
             p.next();
             p.next();
             assert.throws(() => {
                 p.peekExpectOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1302,7 +1319,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.peekExpectClose();
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -1312,7 +1329,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectClose();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectClose(tag)", () => {
@@ -1331,13 +1348,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectClose("img");
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next is not an close token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.peekExpectClose("a");
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -1347,7 +1364,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectClose("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectClose(cb)", () => {
@@ -1366,7 +1383,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.peekExpectClose(() => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -1376,7 +1393,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectClose(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectClose(tag, cb)", () => {
@@ -1397,13 +1414,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectClose("img", () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next is not an close token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.peekExpectClose("a", () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -1413,7 +1430,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectClose("a", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1433,7 +1450,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectText();
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -1441,7 +1458,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectText();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectText(match)", () => {
@@ -1458,13 +1475,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectText("Click here");
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next token is not text", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectText("Link");
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -1472,7 +1489,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectText("Text");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectText(cb)", () => {
@@ -1490,7 +1507,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a></a>").end();
             assert.throws(() => {
                 p.peekExpectText(() => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -1498,7 +1515,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectText(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectText(match, cb)", () => {
@@ -1517,13 +1534,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectText("Click here", () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next token is not text", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectText("Link", () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -1531,7 +1548,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectText("Text", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1550,7 +1567,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectComment();
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
@@ -1559,7 +1576,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectComment();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectComment(match)", () => {
@@ -1575,13 +1592,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectComment(/^\s*Click here\s*$/);
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next token is not comment", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectComment("Link");
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -1589,7 +1606,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectComment("Comment");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectComment(cb)", () => {
@@ -1606,7 +1623,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a></a>").end();
             assert.throws(() => {
                 p.peekExpectComment(() => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -1614,7 +1631,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectComment(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectComment(match, cb)", () => {
@@ -1632,13 +1649,13 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectComment(/\s*Click here\s*/, () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if the next token is not comment", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekExpectComment("Link", () => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("Link").end();
@@ -1646,7 +1663,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectComment("Comment", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1665,7 +1682,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment -->").end();
             assert.throws(() => {
                 p.peekExpectCommentEnd();
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
@@ -1674,7 +1691,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectCommentEnd();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectCommentEnd(cb)", () => {
@@ -1692,7 +1709,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment -->").end();
             assert.throws(() => {
                 p.peekExpectCommentEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<!-- Comment -->").end();
@@ -1701,7 +1718,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectCommentEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1723,7 +1740,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectEnd();
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -1733,7 +1750,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectEnd();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekExpectEnd(cb)", () => {
@@ -1755,7 +1772,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "peekExpect");
         });
         it("throws an exception if there are no more tokens", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -1765,7 +1782,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.peekExpectEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1785,7 +1802,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><!-- Comment -->").end();
             assert.throws(() => {
                 p.peekSkipToOpen();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToOpen(tag)", () => {
@@ -1802,7 +1819,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToOpen("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToOpen(tag, match)", () => {
@@ -1819,7 +1836,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToOpen("img", {src: "image.jpg"});
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToOpen(cb)", () => {
@@ -1837,7 +1854,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToOpen("a", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToOpen(tag, {}, cb)", () => {
@@ -1855,7 +1872,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToOpen("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToOpen(tag, match, cb)", () => {
@@ -1873,7 +1890,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToOpen("img", {src: "image.jpg"}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1892,7 +1909,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><!-- Comment -->").end();
             assert.throws(() => {
                 p.peekSkipToClose();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToClose(tag)", () => {
@@ -1909,7 +1926,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToClose("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToClose(cb)", () => {
@@ -1926,7 +1943,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToClose("a", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.peekSkipToClose(tag, cb)", () => {
@@ -1943,7 +1960,7 @@ describe("Parser", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
             assert.throws(() => {
                 p.peekSkipToClose("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1964,7 +1981,7 @@ describe("Parser", () => {
             });
             assert.throws(() => {
                 p.peek();
-            });
+            }, Error, "eof");
         });
     });
 
@@ -1992,7 +2009,7 @@ describe("Parser", () => {
             });
             assert.throws(() => {
                 p.peek(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -2017,7 +2034,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpen();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpen(tag)", () => {
@@ -2044,7 +2061,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpen("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpen(tag, match)", () => {
@@ -2076,7 +2093,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpen("a", {href: "index.html"});
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpen(cb)", () => {
@@ -2104,7 +2121,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpen(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpen(tag, {}, cb)", () => {
@@ -2141,7 +2158,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpen("img", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpen(tag, match, cb)", () => {
@@ -2187,7 +2204,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpen("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -2214,7 +2231,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifClose();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifClose(tag)", () => {
@@ -2245,7 +2262,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifClose("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifClose(cb)", () => {
@@ -2275,7 +2292,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifClose(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifClose(tag, cb)", () => {
@@ -2316,7 +2333,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifClose("a", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -2332,7 +2349,7 @@ describe("Parser", () => {
             let p = new Parser().write("<section></p>").end();
             assert.throws(() => {
                 p.ifOpenClose();
-            });
+            }, Error, "expect");
         });
         it("returns false if the next token is not open", () => {
             let p = new Parser().write("<br/>").end();
@@ -2347,7 +2364,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpenClose();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpenClose(tag)", () => {
@@ -2360,7 +2377,7 @@ describe("Parser", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             assert.throws(() => {
                 p.ifOpenClose("a");
-            });
+            }, Error, "expect");
         });
         it("returns false if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
@@ -2380,7 +2397,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpenClose("a");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpenClose(tag, match)", () => {
@@ -2411,7 +2428,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpenClose("a", {href: "index.html"});
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpenClose(cb)", () => {
@@ -2431,7 +2448,7 @@ describe("Parser", () => {
                 p.ifOpenClose(() => {
                     p.expectOpen("br");
                 });
-            });
+            }, Error, "expect");
         });
         it("returns false if the next token is not open", () => {
             let p = new Parser().write("<br/>").end();
@@ -2450,7 +2467,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpenClose(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpenClose(tag, {}, cb)", () => {
@@ -2470,7 +2487,7 @@ describe("Parser", () => {
                 p.ifOpenClose("a", {}, () => {
                     p.expectOpen("br");
                 });
-            });
+            }, Error, "expect");
         });
         it("returns false if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
@@ -2498,7 +2515,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpenClose("a", {}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifOpenClose(tag, match, cb)", () => {
@@ -2547,7 +2564,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifOpenClose("a", {href: "index.html"}, () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -2572,7 +2589,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifText();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifText(match)", () => {
@@ -2599,7 +2616,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifText("Text");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifText(cb)", () => {
@@ -2626,7 +2643,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifText(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifText(match, cb)", () => {
@@ -2663,7 +2680,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifText("Text", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -2688,7 +2705,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifComment();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifComment(match)", () => {
@@ -2714,7 +2731,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifComment("Comment");
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifComment(cb)", () => {
@@ -2740,7 +2757,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifComment(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifComment(match, cb)", () => {
@@ -2776,7 +2793,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifComment("Comment", () => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -2801,7 +2818,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifCommentEnd();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifCommentEnd(cb)", () => {
@@ -2829,7 +2846,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifCommentEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 
@@ -2859,7 +2876,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifEnd();
-            });
+            }, Error, "eof");
         });
     });
     describe("p.ifEnd(cb)", () => {
@@ -2892,7 +2909,7 @@ describe("Parser", () => {
             p.next();
             assert.throws(() => {
                 p.ifEnd(() => { /*do nothing*/ });
-            });
+            }, Error, "eof");
         });
     });
 });
