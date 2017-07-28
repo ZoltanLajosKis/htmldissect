@@ -33,19 +33,44 @@ describe("Token", () => {
         });
     });
     describe("t.isOpen(tag, match)", () => {
-        it("returns true for an open token with the same tag and matching attributes", () => {
-            let t = Token.newOpen("a", {href: "index.html", rel: "nofollow"});
-            let res = t.isOpen("a", {href: /.*?\.html/, rel: "nofollow"});
+        it("returns true for an open token with the same tag and matching attributes (str)", () => {
+            let t = Token.newOpen("img", {src: "pic.jpg", class: "thumbnail"});
+            let res = t.isOpen("img", {src: "pic.jpg", class: "thumbnail"});
             assert.equal(res, true);
+        });
+        it("returns false for an open token with the same tag and not matching attributes (str)", () => {
+            let t = Token.newOpen("img", {src: "pic.jpg", class: "thumbnail"});
+            let res = t.isOpen("img", {src: "image.jpg", class: "thumbnail"});
+            assert.equal(res, false);
+        });
+        it("returns true for an open token with the same tag and matching attributes (fn)", () => {
+            let t = Token.newOpen("span", {class: "important largefont"});
+            let res = t.isOpen("span", {class: s => s.startsWith("important")});
+            assert.equal(res, true);
+        });
+        it("returns false for an open token with the same tag and not matching attributes (fn)", () => {
+            let t = Token.newOpen("span", {class: "important largefont"});
+            let res = t.isOpen("span", {class: s => s.startsWith("notice")});
+            assert.equal(res, false);
+        });
+        it("returns true for an open token with the same tag and matching attributes (re)", () => {
+            let t = Token.newOpen("span", {class: "important largefont"});
+            let res = t.isOpen("span", {class: /^important .+$/});
+            assert.equal(res, true);
+        });
+        it("returns false for an open token with the same tag and not matching attributes (re)", () => {
+            let t = Token.newOpen("span", {class: "important largefont"});
+            let res = t.isOpen("span", {class: /^important .{5}$/});
+            assert.equal(res, false);
+        });
+        it("returns false for an open token with the same tag and different attributes", () => {
+            let t = Token.newOpen("img", {src: "pic.jpg", class: "thumbnail"});
+            let res = t.isOpen("span", {src: "pic.jpg", style: "border: 3px;"});
+            assert.equal(res, false);
         });
         it("returns false for an open token with different tag", () => {
             let t = Token.newOpen("img", {src: "pic.jpg"});
             let res = t.isOpen("a");
-            assert.equal(res, false);
-        });
-        it("returns false for an open token with same tag but non-matching attributes", () => {
-            let t = Token.newOpen("a", {href: "index.html", rel: "nofollow"});
-            let res = t.isOpen("a", {href: /.*?\.js/});
             assert.equal(res, false);
         });
         it("returns false with for a different token", () => {
@@ -294,66 +319,6 @@ describe("Token", () => {
         it("returns false for a different token", () => {
             let t = Token.newComment("HTML dissect");
             let res = t.isCommentEnd();
-            assert.equal(res, false);
-        });
-    });
-
-
-    describe("t.hasAttrs(attrs)", () => {
-        it("returns true for an open token with matching attributes", () => {
-            let t = Token.newOpen("img", {src: "pic.jpg", class: "thumbnail"});
-            let res = t.hasAttrs({src: "pic.jpg", class: "thumbnail"});
-            assert.equal(res, true);
-        });
-        it("returns false for an open token with not matching attributes", () => {
-            let t = Token.newOpen("img", {src: "pic.jpg", class: "thumbnail"});
-            let res = t.hasAttrs({src: "image.jpg", class: "thumbnail"});
-            assert.equal(res, false);
-        });
-        it("returns false for an open token with different attributes", () => {
-            let t = Token.newOpen("img", {src: "pic.jpg", class: "thumbnail"});
-            let res = t.hasAttrs({src: "pic.jpg", style: "border: 3px;"});
-            assert.equal(res, false);
-        });
-        it("returns false for a different token", () => {
-            let t = Token.newClose("img");
-            let res = t.hasAttrs({src: "pic.jpg", class: "thumbnail"});
-            assert.equal(res, false);
-        });
-    });
-    describe("t.hasAttrs(attrStr)", () => {
-        it("returns true for an open token with matching attributes", () => {
-            let t = Token.newOpen("span", {class: "important largefont"});
-            let res = t.hasAttrs({class: "important largefont"});
-            assert.equal(res, true);
-        });
-        it("returns false for an open token with not matching attributes", () => {
-            let t = Token.newOpen("span", {class: "important largefont"});
-            let res = t.hasAttrs({class: "important smallfont"});
-            assert.equal(res, false);
-        });
-    });
-    describe("t.hasAttrs(attrFn)", () => {
-        it("returns true for an open token with matching attributes", () => {
-            let t = Token.newOpen("span", {class: "important largefont"});
-            let res = t.hasAttrs({class: s => s.startsWith("important")});
-            assert.equal(res, true);
-        });
-        it("returns false for an open token with not matching attributes", () => {
-            let t = Token.newOpen("span", {class: "important largefont"});
-            let res = t.hasAttrs({class: s => s.startsWith("notice")});
-            assert.equal(res, false);
-        });
-    });
-    describe("t.hasAttrs(attrRE)", () => {
-        it("returns true for an open token with matching attributes", () => {
-            let t = Token.newOpen("span", {class: "important largefont"});
-            let res = t.hasAttrs({class: /^important .+$/});
-            assert.equal(res, true);
-        });
-        it("returns false for an open token with not matching attributes", () => {
-            let t = Token.newOpen("span", {class: "important largefont"});
-            let res = t.hasAttrs({class: /^important .{5}$/});
             assert.equal(res, false);
         });
     });

@@ -301,7 +301,4 @@ including an explicit end token at the end.
   predicate function.
 - **`isCommentEnd()`**: Returns true if the token is a comment end token.
 - **`isEnd()`**: Returns true if the token is an end token.
-- **`hasAttrs(match)`**: Returns true if the token is an open token and matches
-  the `match` parameter, where `match` is an object that can specify for each
-  attribute a string, regexp or predicate function.
 
