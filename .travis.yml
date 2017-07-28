@@ -11,3 +11,10 @@ notifications:
     on_success: never
     on_failure: always
 
+deploy:
+  provider: npm
+  email: zoltan.lajos.kis@gmail.com
+  api_key: $NPM_TOKEN
+  on:
+    tags: true
+
