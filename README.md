@@ -260,7 +260,8 @@ multiple type of tokens can follow.
 The if methods only move to the next token and return it if the token matches
 the conditions; otherwise it returns falls. They can be used for handling
 optional tags (as a shorthand for a peek followed by a single test on the
-token).
+token). The if methods return true when used with a callback so they can be
+used in switch statements.
 
 - **`ifOpen(tag, match, cb)`**: Returns the next token, or if `tag` is
   specified returns its attributes. Returns `false` if the next token is not

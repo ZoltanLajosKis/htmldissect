@@ -2097,12 +2097,15 @@ describe("Parser", () => {
         });
     });
     describe("p.ifOpen(cb)", () => {
-        it("calls cb with the next token if it is an open token", (done) => {
+        it("calls cb with the next token if it is an open token", () => {
             let p = new Parser().write("<a>").end();
-            p.ifOpen(t => {
+            let cb = false;
+            let r = p.ifOpen(t => {
                 assert.equal(t.isOpen(), true);
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is not open", () => {
             let p = new Parser().write("<a></a>").end();
@@ -2125,12 +2128,15 @@ describe("Parser", () => {
         });
     });
     describe("p.ifOpen(tag, {}, cb)", () => {
-        it("calls cb with the attributes of the next token if it is an open token with the same tag", (done) => {
+        it("calls cb with the attributes of the next token if it is an open token with the same tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
-            p.ifOpen("img", {}, a => {
+            let cb = false;
+            let r = p.ifOpen("img", {}, a => {
                 assert.equal(a.src, "pic.jpg");
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is open with a different tag", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
@@ -2162,12 +2168,15 @@ describe("Parser", () => {
         });
     });
     describe("p.ifOpen(tag, match, cb)", () => {
-        it("calls cb with the attributes of the next token if it is an open token with the same tag and matching attributes", (done) => {
+        it("calls cb with the attributes of the next token if it is an open token with the same tag and matching attributes", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
-            p.ifOpen("img", {src: "pic.jpg"}, a => {
+            let cb = false;
+            let r = p.ifOpen("img", {src: "pic.jpg"}, a => {
                 assert.equal(a.src, "pic.jpg");
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is open with matching tag and different attributes", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
@@ -2266,14 +2275,17 @@ describe("Parser", () => {
         });
     });
     describe("p.ifClose(cb)", () => {
-        it("calls cb with the next token if it is a close token", (done) => {
+        it("calls cb with the next token if it is a close token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
-            p.ifClose(t => {
+            let cb = false;
+            let r = p.ifClose(t => {
                 assert.equal(t.isClose(), true);
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is not close", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -2296,14 +2308,17 @@ describe("Parser", () => {
         });
     });
     describe("p.ifClose(tag, cb)", () => {
-        it("calls cb with the next token if it is a close token with the same tag", (done) => {
+        it("calls cb with the next token if it is a close token with the same tag", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
-            p.ifClose("a", t => {
+            let cb = false;
+            let r = p.ifClose("a", t => {
                 assert.equal(t.isClose(), true);
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is close with a different tag", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -2434,13 +2449,15 @@ describe("Parser", () => {
     describe("p.ifOpenClose(cb)", () => {
         it("calls the cb with the next token if it is an open token followed by a pair close token (after cb execution)", () => {
             let p = new Parser().write("<a href='index.html'>Link</a><br/>").end();
-            let res = false;
-            p.ifOpenClose(t => {
-                res = t.isOpen("a");
+            let cb = false;
+            let r = p.ifOpenClose(t => {
+                assert.equal(t.isOpen("a"), true);
                 p.expectText();
+                cb = true;
             });
             p.expectOpen("br");
-            assert.equal(res, true);
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("throws an exception if the next token is an open not followed by a pair close token", () => {
             let p = new Parser().write("<p><br/></p>").end();
@@ -2473,13 +2490,15 @@ describe("Parser", () => {
     describe("p.ifOpenClose(tag, {}, cb)", () => {
         it("calls the cb with the attributes of next token if it is an open token with the same tag if it is followed by a pair close token (after cb execution)", () => {
             let p = new Parser().write("<a href='index.html'>Link</a><br/>").end();
-            let res = false;
-            p.ifOpenClose("a", {}, a => {
-                res = a.href === "index.html";
-                p.ifText();
+            let cb = false;
+            let r = p.ifOpenClose("a", {}, a => {
+                assert.equal(a.href, "index.html");
+                p.expectText();
+                cb = true;
             });
-            p.ifOpen("br");
-            assert.equal(res, true);
+            p.expectOpen("br");
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("throws an exception if the next token is open with the same tag not followed by a pair close token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -2521,13 +2540,15 @@ describe("Parser", () => {
     describe("p.ifOpenClose(tag, match, cb)", () => {
         it("calls the cb returns the attributes of the next token if it is an open token with the same tag and matching attributes if it is followed by a pair close token (after cb execution)", () => {
             let p = new Parser().write("<a href='index.html'>Link</a><br/>").end();
-            let res = false;
-            p.ifOpenClose("a", {href: "index.html"}, a => {
-                res = a.href === "index.html";
-                p.ifText();
+            let cb = false;
+            let r = p.ifOpenClose("a", {href: "index.html"}, a => {
+                assert.equal(a.href, "index.html");
+                p.expectText();
+                cb = true;
             });
             p.ifOpen("br");
-            assert.equal(res, true);
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is open with matching tag and different attributes", () => {
             let p = new Parser().write("<img src='pic.jpg'>").end();
@@ -2620,13 +2641,16 @@ describe("Parser", () => {
         });
     });
     describe("p.ifText(cb)", () => {
-        it("calls cb with the text of the next token if it is a text token", (done) => {
+        it("calls cb with the text of the next token if it is a text token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
-            p.ifText(text => {
+            let cb = false;
+            let r = p.ifText(text => {
                 assert.equal(text, "Link");
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is not text", () => {
             let p = new Parser().write("<a></a>").end();
@@ -2647,13 +2671,16 @@ describe("Parser", () => {
         });
     });
     describe("p.ifText(match, cb)", () => {
-        it("calls cb with the text of the next token if it is a text token with matching text", (done) => {
+        it("calls cb with the text of the next token if it is a text token with matching text", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
-            p.ifText("Link", text => {
+            let cb = false;
+            let r = p.ifText("Link", text => {
                 assert.equal(text, "Link");
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is text with non-matching text", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -2735,12 +2762,15 @@ describe("Parser", () => {
         });
     });
     describe("p.ifComment(cb)", () => {
-        it("calls cb with the text of the next token if it is a comment token", (done) => {
+        it("calls cb with the text of the next token if it is a comment token", () => {
             let p = new Parser().write("<!-- Comment -->").end();
-            p.ifComment(text => {
+            let cb = false;
+            let r = p.ifComment(text => {
                 assert.equal(text.trim(), "Comment");
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is not comment", () => {
             let p = new Parser().write("<a></a>").end();
@@ -2761,12 +2791,15 @@ describe("Parser", () => {
         });
     });
     describe("p.ifComment(match, cb)", () => {
-        it("calls cb with the text of the next token if it is a comment token with matching text", (done) => {
+        it("calls cb with the text of the next token if it is a comment token with matching text", () => {
             let p = new Parser().write("<!-- Comment -->").end();
-            p.ifComment(/^\s*Comment\s*$/, text => {
+            let cb = false;
+            let r = p.ifComment(/^\s*Comment\s*$/, text => {
                 assert.equal(text.trim(), "Comment");
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is comment with non-matching text", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
@@ -2822,13 +2855,16 @@ describe("Parser", () => {
         });
     });
     describe("p.ifCommentEnd(cb)", () => {
-        it("calls cb with the next token if it is a comment end token", (done) => {
+        it("calls cb with the next token if it is a comment end token", () => {
             let p = new Parser().write("<!-- Comment -->").end();
             p.next();
-            p.ifCommentEnd(t => {
+            let cb = false;
+            let r = p.ifCommentEnd(t => {
                 assert.equal(t.isCommentEnd(), true);
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is not comment end", () => {
             let p = new Parser().write("<!-- Comment -->").end();
@@ -2880,15 +2916,18 @@ describe("Parser", () => {
         });
     });
     describe("p.ifEnd(cb)", () => {
-        it("calls cb with the next token if it is an end token", (done) => {
+        it("calls cb with the next token if it is an end token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
             p.next();
             p.next();
             p.next();
-            p.ifEnd(t => {
+            let cb = false;
+            let r = p.ifEnd(t => {
                 assert.equal(t.isEnd(), true);
-                done();
+                cb = true;
             });
+            assert.equal(cb, true);
+            assert.equal(r, true);
         });
         it("returns false if the next token is not an end token", () => {
             let p = new Parser().write("<a href='index.html'>Link</a>").end();
