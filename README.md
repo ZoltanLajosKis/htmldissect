@@ -42,7 +42,6 @@ HTML snippet below.
   <p>Ut labore.</p>
   <p>Et dolore magna aliqua.</p>
 </section>
-
 ```
 
 ### Procedural style
@@ -57,23 +56,24 @@ const map = {};
 p.expectOpen("section", {id: "main"});
 let title;
 let text = [];
-for (;;) {
+loop: for (;;) {
     let next = p.peek();
-    if (next.isOpen("h3")) {
+    switch (true) {
+    case next.isOpen("h3"):
         if (title) { map[title] = text; text = []; }
 
         p.expectOpen("h3");
         title = p.expectText().trim();
         p.expectClose("h3");
-
-    } else if (next.isOpen("p")) {
+        break;
+    case next.isOpen("p"):
         p.expectOpen("p");
         text.push(p.expectText().trim());
         p.expectClose("p");
-
-    } else if (next.isClose("section")) {
-        map[title] = text;
         break;
+    case next.isClose("section"):
+        map[title] = text;
+        break loop;
     }
 }
 p.expectClose("section");
@@ -93,27 +93,22 @@ const p = new Parser({skipWhitespaceOnlyText: true}).write(html).end();
 const map = {};
 
 p.expectOpen("section", {id: "main"});
-p.peek(next => {
-    let title;
-    let text = [];
-    for (;;) {
-        if (next.isOpen("h3")) {
+let title;
+let text = [];
+p.peekIter(t => {
+    switch (true) {
+    case p.ifOpen("h3", {}, () => {
             if (title) { map[title] = text; text = []; }
-
-            p.expectOpen("h3");
             p.expectText(t => { title = t.trim(); });
             p.expectClose("h3");
-
-        } else if (next.isOpen("p")) {
-            p.expectOpen("p");
+        }): break;
+    case p.ifOpen("p", {}, () => {
             p.expectText(t => { text.push(t.trim()); });
             p.expectClose("p");
-
-        } else if (next.isClose("section")) {
-            map[title] = text;
-            break;
-        }
-        next = p.peek();
+        }): break;
+    case t.isClose("section"):
+        map[title] = text;
+        return false;
     }
 });
 p.expectClose("section");
@@ -134,28 +129,23 @@ const p = new Parser({skipWhitespaceOnlyText: true}).write(html).end();
 const map = {};
 
 p.expectOpenClose("section", {id: "main"}, () => {
-    p.peek(next => {
-        let title;
-        let text = [];
-        for (;;) {
-            if (next.isOpen("h3")) {
-                if (title) { map[title] = text; text = []; }
-
-                p.expectOpenClose("h3", {}, () => {
-                    p.expectText(t => { title = t.trim(); });
-                });
-
-            } else if (next.isOpen("p")) {
-                p.expectOpenClose("p", {}, () => {
-                    p.expectText(t => { text.push(t.trim()); });
-                });
-
-            } else if (next.isClose("section")) {
-                map[title] = text;
-                break;
-            }
-            next = p.peek();
-        }
+    let title;
+    let text = [];
+    p.peekIter(t => {
+        switch (true) {
+        case p.ifOpenClose("h3", {}, () => {
+            if (title) { map[title] = text; text = []; }
+            p.expectText(t => { title = t.trim(); });
+            }):
+            break;
+        case p.ifOpenClose("p", {}, () => {
+            p.expectText(t => { text.push(t.trim()); });
+            }):
+            break;
+        case t.isClose("section"):
+            map[title] = text;
+            return false;
+      }
     });
 });
 p.expectEnd();
