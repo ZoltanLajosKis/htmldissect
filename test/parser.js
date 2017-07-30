@@ -1964,6 +1964,61 @@ describe("Parser", () => {
         });
     });
 
+
+
+    describe("p.peekIter(cb)", () => {
+        it("iterates over tokens until cb returns false", () => {
+            let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            let cb = 0;
+            p.peekIter(t => {
+                switch (true) {
+                case t.isOpen("a", {href: "index.html"}):
+                case t.isText("Link"):
+                    p.next();
+                    cb++;
+                    break;
+                case t.isClose("a"):
+                    return false;
+                }
+                return true;
+            });
+            let t = p.peek();
+            assert.equal(t.isClose("a"), true);
+            assert.equal(cb, 2);
+        });
+        it("throws an exception if cb did not move any tokens", () => {
+            let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            let cb = 0;
+            assert.throws(() => {
+                p.peekIter(t => {
+                    switch (true) {
+                    case t.isOpen("a", {href: "index.html"}):
+                    case t.isText("Link"):
+                        cb++;
+                        break;
+                    case t.isClose("a"):
+                        return false;
+                    }
+                    return true;
+                });
+            }, Error, "iter");
+            assert.equal(cb, 1);
+        });
+        it("throws an exception if there are no more tokens", () => {
+            let p = new Parser().write("<a href='index.html'>Link</a>").end();
+            let cb = 0;
+            assert.throws(() => {
+                p.peekIter(() => {
+                    p.next();
+                    cb++;
+                });
+            }, Error, "eof");
+            assert.equal(cb, 4);
+        });
+    });
+
+
+
     describe("p.peek()", () => {
         it("returns the next token but does not jump on it", () => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();
@@ -1984,9 +2039,6 @@ describe("Parser", () => {
             }, Error, "eof");
         });
     });
-
-
-
     describe("p.peek(cb)", () => {
         it("calls cb with the next token but does not jump on it", (done) => {
             let p = new Parser().write("<!-- Comment --><<img src='pic.jpg'>").end();

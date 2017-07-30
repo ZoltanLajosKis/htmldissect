@@ -256,6 +256,9 @@ multiple type of tokens can follow.
 - **`peekSkipToClose(tag, cb)`**: Skips to before the next close token that
   matches the optional `tag` parameter. Returns the token. Throws an exception
   if no matching token is found to skip to.
+- **`peekIter(cb)`**: Iterates tokens, passing each of them to `cb`. Iteration
+  stops when `cb` returns false. Throws an exception if `cb` did not move any
+  tokens, or if there are no more tokens.
 
 The if methods only move to the next token and return it if the token matches
 the conditions; otherwise it returns falls. They can be used for handling
